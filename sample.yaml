@@ -1,0 +1,26 @@
+sample:
+  description: QMI8658C 6-axis Motion Tracking Device sample
+  name: QMI8658C sensor sample
+tests:
+  sample.sensor.qmi8658c:
+    build_only: true
+    platform_allow:
+      - nrf52dk/nrf52832
+      - nrf52840dk/nrf52840
+      - nrf5340dk/nrf5340/cpuapp
+    integration_platforms:
+      - nrf52dk/nrf52832
+    tags: sensors
+    depends_on: i2c gpio
+  sample.sensor.qmi8658c.trigger:
+    build_only: true
+    platform_allow:
+      - nrf52dk/nrf52832
+      - nrf52840dk/nrf52840
+      - nrf5340dk/nrf5340/cpuapp
+    integration_platforms:
+      - nrf52dk/nrf52832
+    tags: sensors
+    depends_on: i2c gpio
+    extra_args:
+      - OVERLAY_CONFIG=overlay-trigger.conf
