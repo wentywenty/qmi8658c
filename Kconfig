@@ -1,21 +1,121 @@
-# QMI8658C Six-Axis Motion Tracking device configuration options
-
-# Copyright (c) 2016 Intel Corporation
-# SPDX-License-Identifier: Apache-2.0
-
 menuconfig QMI8658C
-    bool "QMI8658C Six-Axis Motion Tracking Device"
+    bool "QST QMI8658C Six-Axis IMU"
     default y
     depends on DT_HAS_QST_QMI8658C_ENABLED
     select I2C
     help
-      Enable driver for QMI8658C I2C-based six-axis motion tracking device.
+      Enable driver for QST QMI8658C 6-axis IMU.
 
 if QMI8658C
 
+choice QMI8658C_ACCEL_RANGE
+    prompt "Accelerometer full-scale range"
+    default QMI8658C_ACCEL_RANGE_8G
+    help
+      Select the accelerometer full-scale range.
+
+    config QMI8658C_ACCEL_RANGE_2G
+        bool "±2g"
+    config QMI8658C_ACCEL_RANGE_4G
+        bool "±4g"
+    config QMI8658C_ACCEL_RANGE_8G
+        bool "±8g"
+    config QMI8658C_ACCEL_RANGE_16G
+        bool "±16g"
+endchoice
+
+config QMI8658C_ACCEL_RANGE
+    int
+    default 0 if QMI8658C_ACCEL_RANGE_2G
+    default 1 if QMI8658C_ACCEL_RANGE_4G
+    default 2 if QMI8658C_ACCEL_RANGE_8G
+    default 3 if QMI8658C_ACCEL_RANGE_16G
+
+choice QMI8658C_GYRO_RANGE
+    prompt "Gyroscope full-scale range"
+    default QMI8658C_GYRO_RANGE_1024DPS
+    help
+      Select the gyroscope full-scale range.
+
+    config QMI8658C_GYRO_RANGE_16DPS
+        bool "±16 degrees per second"
+    config QMI8658C_GYRO_RANGE_32DPS
+        bool "±32 degrees per second"
+    config QMI8658C_GYRO_RANGE_64DPS
+        bool "±64 degrees per second"
+    config QMI8658C_GYRO_RANGE_128DPS
+        bool "±128 degrees per second"
+    config QMI8658C_GYRO_RANGE_256DPS
+        bool "±256 degrees per second"
+    config QMI8658C_GYRO_RANGE_512DPS
+        bool "±512 degrees per second"
+    config QMI8658C_GYRO_RANGE_1024DPS
+        bool "±1024 degrees per second"
+    config QMI8658C_GYRO_RANGE_2048DPS
+        bool "±2048 degrees per second"
+endchoice
+
+config QMI8658C_GYRO_RANGE
+    int
+    default 0 if QMI8658C_GYRO_RANGE_16DPS
+    default 1 if QMI8658C_GYRO_RANGE_32DPS
+    default 2 if QMI8658C_GYRO_RANGE_64DPS
+    default 3 if QMI8658C_GYRO_RANGE_128DPS
+    default 4 if QMI8658C_GYRO_RANGE_256DPS
+    default 5 if QMI8658C_GYRO_RANGE_512DPS
+    default 6 if QMI8658C_GYRO_RANGE_1024DPS
+    default 7 if QMI8658C_GYRO_RANGE_2048DPS
+
+choice QMI8658C_ODR
+    prompt "Output data rate"
+    default QMI8658C_ODR_125HZ
+    help
+      Select the output data rate.
+
+    config QMI8658C_ODR_7_8125HZ
+        bool "7.8125 Hz"
+    config QMI8658C_ODR_15_625HZ
+        bool "15.625 Hz"
+    config QMI8658C_ODR_31_25HZ
+        bool "31.25 Hz"
+    config QMI8658C_ODR_62_5HZ
+        bool "62.5 Hz"
+    config QMI8658C_ODR_125HZ
+        bool "125 Hz"
+    config QMI8658C_ODR_250HZ
+        bool "250 Hz"
+    config QMI8658C_ODR_500HZ
+        bool "500 Hz"
+    config QMI8658C_ODR_1000HZ
+        bool "1000 Hz"
+endchoice
+
+config QMI8658C_ACCEL_ODR
+    int
+    default 7 if QMI8658C_ODR_7_8125HZ
+    default 6 if QMI8658C_ODR_15_625HZ
+    default 5 if QMI8658C_ODR_31_25HZ
+    default 4 if QMI8658C_ODR_62_5HZ
+    default 3 if QMI8658C_ODR_125HZ
+    default 2 if QMI8658C_ODR_250HZ
+    default 1 if QMI8658C_ODR_500HZ
+    default 0 if QMI8658C_ODR_1000HZ
+
+config QMI8658C_GYRO_ODR
+    int
+    default 7 if QMI8658C_ODR_7_8125HZ
+    default 6 if QMI8658C_ODR_15_625HZ
+    default 5 if QMI8658C_ODR_31_25HZ
+    default 4 if QMI8658C_ODR_62_5HZ
+    default 3 if QMI8658C_ODR_125HZ
+    default 2 if QMI8658C_ODR_250HZ
+    default 1 if QMI8658C_ODR_500HZ
+    default 0 if QMI8658C_ODR_1000HZ
+
+# 触发器配置部分，与之前类似
 choice
     prompt "Trigger mode"
-    default QMI8658C_TRIGGER_GLOBAL_THREAD
+    default QMI8658C_TRIGGER_NONE
     help
       Specify the type of triggering to be used by the driver.
 
@@ -25,48 +125,12 @@ config QMI8658C_TRIGGER_NONE
 config QMI8658C_TRIGGER_GLOBAL_THREAD
     bool "Use global thread"
     depends on GPIO
-    depends on $(dt_compat_any_has_prop,$(DT_COMPAT_QST_QMI8658C),int-gpios)
     select QMI8658C_TRIGGER
 
 config QMI8658C_TRIGGER_OWN_THREAD
     bool "Use own thread"
     depends on GPIO
-    depends on $(dt_compat_any_has_prop,$(DT_COMPAT_QST_QMI8658C),int-gpios)
     select QMI8658C_TRIGGER
-
 endchoice
-
-config QMI8658C_TRIGGER
-    bool
-
-config QMI8658C_THREAD_PRIORITY
-    int "Thread priority"
-    depends on QMI8658C_TRIGGER_OWN_THREAD
-    default 10
-    help
-      Priority of thread used by the driver to handle interrupts.
-
-config QMI8658C_THREAD_STACK_SIZE
-    int "Thread stack size"
-    depends on QMI8658C_TRIGGER_OWN_THREAD
-    default 1024
-    help
-      Stack size of thread used by the driver to handle interrupts.
-
-config QMI8658C_ACCEL_FS
-    int "Accelerometer full-scale range"
-    default 2
-    help
-      Accelerometer full-scale range.
-      An X value for the config represents a range of +/- X g. Valid
-      values are 2, 4, 8, 16.
-
-config QMI8658C_GYRO_FS
-    int "Gyroscope full-scale range"
-    default 250
-    help
-      Gyroscope full-scale range.
-      An X value for the config represents a range of +/- X degrees/second.
-      Valid values are 250, 500, 1000, 2000.
 
 endif # QMI8658C

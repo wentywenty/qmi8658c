@@ -1,10 +1,5 @@
-# Copyright (c) 2019 Nordic Semiconductor ASA
-# SPDX-License-Identifier: Apache-2.0
+description: QST QMI8658C 6-axis IMU
 
-description: QMI8658C 6-axis Motion Tracking Device
-
-# QMI8658C supports both I2C and SPI interface
-# Currently driver only supports I2C
 compatible: "qst,qmi8658c"
 
 include: [sensor-device.yaml, i2c-device.yaml]
@@ -13,6 +8,6 @@ properties:
   int-gpios:
     type: phandle-array
     description: |
-      The INT signal default configuration is active-high.  The
-      property value should ensure the flags properly describe the
-      signal that is presented to the driver.
+      GPIO connected to the sensor's INT1 pin.
+      This is used for data-ready interrupt signal.
+      
