@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#define DT_DRV_COMPAT qst_qmi8658c
+#define DT_DRV_COMPAT invensense_qmi8658c
 
 #include <zephyr/drivers/i2c.h>
 #include <zephyr/drivers/sensor.h>

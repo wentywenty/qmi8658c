@@ -40,15 +40,15 @@ if (-not (Test-Path $driverPath)) {
 }
 
 # 创建设备树绑定目录
-$dtsBindingPath = "$zephyrRootPath\dts\bindings\sensor\qst"
-if (-not (Test-Path "$zephyrRootPath\dts\bindings\sensor")) {
-    Write-Host "创建目录: $zephyrRootPath\dts\bindings\sensor"
-    New-Item -ItemType Directory -Force -Path "$zephyrRootPath\dts\bindings\sensor" | Out-Null
-}
-if (-not (Test-Path $dtsBindingPath)) {
-    Write-Host "创建目录: $dtsBindingPath"
-    New-Item -ItemType Directory -Force -Path $dtsBindingPath | Out-Null
-}
+$dtsBindingPath = "$zephyrRootPath\dts\bindings\sensor"
+# if (-not (Test-Path "$zephyrRootPath\dts\bindings\sensor")) {
+#     Write-Host "创建目录: $zephyrRootPath\dts\bindings\sensor"
+#     New-Item -ItemType Directory -Force -Path "$zephyrRootPath\dts\bindings\sensor" | Out-Null
+# }
+# if (-not (Test-Path $dtsBindingPath)) {
+#     Write-Host "创建目录: $dtsBindingPath"
+#     New-Item -ItemType Directory -Force -Path $dtsBindingPath | Out-Null
+# }
 
 # 复制文件到目标位置
 Write-Host "复制驱动文件..." -ForegroundColor Green
@@ -61,7 +61,7 @@ Copy-Item -Path "$sourceDir\CMakeLists.txt" -Destination "$driverPath\" -Force
 Copy-Item -Path "$sourceDir\Kconfig" -Destination "$driverPath\" -Force
 
 # 复制设备树绑定文件
-Copy-Item -Path "$sourceDir\invensense,qmi8658c.yaml" -Destination "$dtsBindingPath\qmi8658c.yaml" -Force
+Copy-Item -Path "$sourceDir\invensense,qmi8658c.yaml" -Destination "$dtsBindingPath\invensense,qmi8658c.yaml" -Force
 
 # 更新主Kconfig和CMakeLists.txt文件
 $sensorKconfigPath = "$zephyrRootPath\drivers\sensor\Kconfig"
@@ -71,7 +71,7 @@ $sensorCMakeListsPath = "$zephyrRootPath\drivers\sensor\CMakeLists.txt"
 $sensorKconfig = Get-Content -Path $sensorKconfigPath
 if (-not ($sensorKconfig -match "source.*qst\/qmi8658c\/Kconfig")) {
     Write-Host "更新 $sensorKconfigPath" -ForegroundColor Green
-    Add-Content -Path $sensorKconfigPath -Value "`nsource `"sensor/qst/qmi8658c/Kconfig`""
+    Add-Content -Path $sensorKconfigPath -Value "`nsource `"drivers/sensor/qst/qmi8658c/Kconfig`""
 }
 
 # 检查并添加到CMakeLists.txt
@@ -88,7 +88,7 @@ $qstCMakeListsPath = "$qstDirPath\CMakeLists.txt"
 
 if (-not (Test-Path $qstKconfigPath)) {
     Write-Host "创建 $qstKconfigPath" -ForegroundColor Green
-    Set-Content -Path $qstKconfigPath -Value "# QST Sensor drivers`n`nsource `"sensor/qst/qmi8658c/Kconfig`""
+    Set-Content -Path $qstKconfigPath -Value "# QST Sensor drivers`n`nsource `"drivers/sensor/qst/qmi8658c/Kconfig`""
 }
 
 if (-not (Test-Path $qstCMakeListsPath)) {
@@ -102,9 +102,9 @@ Write-Host @"
 
 &i2c0 {
     status = "okay";
-
+    
     qmi8658c@6a {
-        compatible = "qst,qmi8658c";
+        compatible = "invensense,qmi8658c";
         reg = <0x6a>;
         status = "okay";
     };

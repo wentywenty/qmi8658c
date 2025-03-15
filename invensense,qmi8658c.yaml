@@ -1,6 +1,6 @@
 description: QST QMI8658C 6-axis IMU
 
-compatible: "qst,qmi8658c"
+compatible: "invensense,qmi8658c"
 
 include: [sensor-device.yaml, i2c-device.yaml]
 
@@ -10,4 +10,3 @@ properties:
     description: |
       GPIO connected to the sensor's INT1 pin.
       This is used for data-ready interrupt signal.
-      

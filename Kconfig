@@ -1,7 +1,7 @@
 menuconfig QMI8658C
     bool "QST QMI8658C Six-Axis IMU"
     default y
-    depends on DT_HAS_QST_QMI8658C_ENABLED
+    depends on DT_HAS_INVENSENSE_QMI8658C_ENABLED
     select I2C
     help
       Enable driver for QST QMI8658C 6-axis IMU.
