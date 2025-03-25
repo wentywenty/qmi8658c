@@ -151,7 +151,8 @@ static int qmi8658c_sample_fetch(const struct device *dev,
   return 0;
 }
 
-static DEVICE_API(sensor, qmi8658c_driver_api) = {
+// static DEVICE_API(sensor, qmi8658c_driver_api) = {
+static const struct sensor_driver_api qmi8658c_driver_api = {
 #if CONFIG_QMI8658C_TRIGGER
     .trigger_set = qmi8658c_trigger_set,
 #endif

@@ -108,7 +108,7 @@ static const uint16_t qmi8658c_gyro_sensitivity_x10[] = {1310, 655, 328, 164};
 /* Device type, uses the correct offets for a particular device */
 enum qmi8658c_device_type {
   DEVICE_TYPE_QMI8658C = 0,
-  DEVICE_TYPE_QMI8658C,
+//   DEVICE_TYPE_QMI8658C,
 };
 
 struct qmi8658c_data {
